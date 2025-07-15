@@ -1,819 +1,884 @@
 <!DOCTYPE html>
-    <html lang="zh-CN">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>"妈妈岗"政策舆情分析平台</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-        
-        <script>
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        colors: {
-                            primary: '#6366f1', // 主色调：靛蓝色，代表专业与关怀
-                            secondary: '#f97316', // 辅助色：橙色，代表活力与温暖
-                            neutral: '#f3f4f6', // 中性色：浅灰
-                            dark: '#1e293b', // 深色
-                        },
-                        fontFamily: {
-                            inter: ['Inter', 'sans-serif'],
-                        },
-                    }
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>"妈妈岗"政策舆情分析平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1', // 主色调：靛蓝色，代表专业与关怀
+                        secondary: '#f97316', // 辅助色：橙色，代表活力与温暖
+                        neutral: '#f3f4f6', // 中性色：浅灰
+                        dark: '#1e293b', // 深色
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
                 }
             }
-        </script>
-        
-        <style type="text/tailwindcss">
-            @layer utilities {
-                .content-auto {
-                    content-visibility: auto;
-                }
-                .text-shadow {
-                    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                }
-                .card-hover {
-                    transition: all 0.3s ease;
-                }
-                .card-hover:hover {
-                    transform: translateY(-5px);
-                    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.1), 0 10px 10px -5px rgba(99, 102, 241, 0.04);
-                }
-                .timeline-dot::before {
-                    content: '';
-                    position: absolute;
-                    width: 20px;
-                    height: 20px;
-                    border-radius: 50%;
-                    background-color: theme('colors.primary');
-                    left: -10px;
-                    top: 5px;
-                    z-index: 10;
-                }
-                .timeline-line::before {
-                    content: '';
-                    position: absolute;
-                    width: 2px;
-                    height: 100%;
-                    background-color: theme('colors.primary/30');
-                    left: 0;
-                    top: 0;
-                }
-                .media-img-container {
-                    overflow: hidden;
-                    position: relative;
-                }
-                .media-img {
-                    transition: transform 0.5s ease;
-                    object-fit: cover;
-                    width: 100%;
-                    height: 100%;
-                }
-                .media-card:hover .media-img {
-                    transform: scale(1.05);
-                }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
             }
-        </style>
-    </head>
-    <body class="font-inter bg-gray-50 text-gray-800">
-        <!-- 导航栏 -->
-        <header id="navbar" class="fixed w-full bg-white/90 backdrop-blur-sm shadow-sm z-50 transition-all duration-300">
-            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-                <div class="flex items-center space-x-2">
-                    <i class="fa fa-female text-primary text-2xl"></i>
-                    <h1 class="text-xl font-bold text-primary">妈妈岗政策舆情分析</h1>
-                </div>
-                
-                <!-- 桌面导航 -->
-                <nav class="hidden md:flex items-center space-x-8">
-                    <a href="#background" class="text-gray-600 hover:text-primary transition-colors">事件背景</a>
-                    <a href="#timeline" class="text-gray-600 hover:text-primary transition-colors">时间线</a>
-                    <a href="#media" class="text-gray-600 hover:text-primary transition-colors">媒体报道</a>
-                    <a href="#analysis" class="text-gray-600 hover:text-primary transition-colors">舆情分析</a>
-                    <a href="#suggestions" class="text-gray-600 hover:text-primary transition-colors">政策建议</a>
-                </nav>
-                
-                <!-- 移动端菜单按钮 -->
-                <button id="menuBtn" class="md:hidden text-gray-600 focus:outline-none">
-                    <i class="fa fa-bars text-xl"></i>
-                </button>
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.1), 0 10px 10px -5px rgba(99, 102, 241, 0.04);
+            }
+            .timeline-dot::before {
+                content: '';
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background-color: theme('colors.primary');
+                left: -10px;
+                top: 5px;
+                z-index: 10;
+            }
+            .timeline-line::before {
+                content: '';
+                position: absolute;
+                width: 2px;
+                height: 100%;
+                background-color: theme('colors.primary/30');
+                left: 0;
+                top: 0;
+            }
+            .media-img-container {
+                overflow: hidden;
+                position: relative;
+            }
+            .media-img {
+                transition: transform 0.5s ease;
+                object-fit: cover;
+                width: 100%;
+                height: 100%;
+            }
+            .media-card:hover .media-img {
+                transform: scale(1.05);
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-gray-50 text-gray-800">
+    <!-- 导航栏 -->
+    <header id="navbar" class="fixed w-full bg-white/90 backdrop-blur-sm shadow-sm z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-female text-primary text-2xl"></i>
+                <h1 class="text-xl font-bold text-primary">妈妈岗政策舆情分析</h1>
             </div>
             
-            <!-- 移动端导航菜单 -->
-            <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
-                <div class="container mx-auto px-4 py-2 flex flex-col space-y-3">
-                    <a href="#background" class="py-2 text-gray-600 hover:text-primary transition-colors">事件背景</a>
-                    <a href="#timeline" class="py-2 text-gray-600 hover:text-primary transition-colors">时间线</a>
-                    <a href="#media" class="py-2 text-gray-600 hover:text-primary transition-colors">媒体报道</a>
-                    <a href="#analysis" class="py-2 text-gray-600 hover:text-primary transition-colors">舆情分析</a>
-                    <a href="#suggestions" class="py-2 text-gray-600 hover:text-primary transition-colors">政策建议</a>
+            <!-- 桌面导航 -->
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#background" class="text-gray-600 hover:text-primary transition-colors">事件背景</a>
+                <a href="#timeline" class="text-gray-600 hover:text-primary transition-colors">时间线</a>
+                <a href="#media" class="text-gray-600 hover:text-primary transition-colors">媒体报道</a>
+                <a href="#analysis" class="text-gray-600 hover:text-primary transition-colors">舆情分析</a>
+                <a href="#suggestions" class="text-gray-600 hover:text-primary transition-colors">政策建议</a>
+            </nav>
+            
+            <!-- 移动端菜单按钮 -->
+            <button id="menuBtn" class="md:hidden text-gray-600 focus:outline-none">
+                <i class="fa fa-bars text-xl"></i>
+            </button>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
+            <div class="container mx-auto px-4 py-2 flex flex-col space-y-3">
+                <a href="#background" class="py-2 text-gray-600 hover:text-primary transition-colors">事件背景</a>
+                <a href="#timeline" class="py-2 text-gray-600 hover:text-primary transition-colors">时间线</a>
+                <a href="#media" class="py-2 text-gray-600 hover:text-primary transition-colors">媒体报道</a>
+                <a href="#analysis" class="py-2 text-gray-600 hover:text-primary transition-colors">舆情分析</a>
+                <a href="#suggestions" class="py-2 text-gray-600 hover:text-primary transition-colors">政策建议</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="pt-24 pb-16 bg-gradient-to-br from-primary/10 to-primary/5">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold text-dark mb-6 leading-tight text-shadow">
+                    "妈妈岗"：女性就业新形态<br class="md:hidden">的争议与探索
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 mb-8">
+                    深入分析"妈妈岗"政策的社会影响、舆情动态与发展建议
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="#analysis" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg">
+                        查看舆情分析 <i class="fa fa-chart-pie ml-2"></i>
+                    </a>
+                    <a href="#suggestions" class="px-6 py-3 bg-white text-primary border border-primary rounded-lg hover:bg-gray-50 transition-colors shadow-sm hover:shadow">
+                        政策建议 <i class="fa fa-lightbulb-o ml-2"></i>
+                    </a>
                 </div>
             </div>
-        </header>
+        </div>
+    </section>
 
-        <!-- 英雄区域 -->
-        <section class="pt-24 pb-16 bg-gradient-to-br from-primary/10 to-primary/5">
-            <div class="container mx-auto px-4">
-                <div class="max-w-4xl mx-auto text-center">
-                    <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold text-dark mb-6 leading-tight text-shadow">
-                        "妈妈岗"：女性就业新形态<br class="md:hidden">的争议与探索
-                    </h1>
-                    <p class="text-lg md:text-xl text-gray-600 mb-8">
-                        深入分析"妈妈岗"政策的社会影响、舆情动态与发展建议
+    <!-- 事件背景 -->
+    <section id="background" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-dark">事件背景</h2>
+                </div>
+                
+                <div class="bg-neutral rounded-xl p-6 shadow-sm mb-8">
+                    <p class="mb-4">
+                        3月5日，十四届全国人大三次会议在北京人民大会堂开幕，国务院总理李强在政府工作报告中指出：制定促进生育政策，发放育儿补贴。消息一出，"发放育儿补贴"便在各社交平台冲上热搜第一，且长时间占据"榜一"。
                     </p>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <a href="#analysis" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg">
-                            查看舆情分析 <i class="fa fa-chart-pie ml-2"></i>
-                        </a>
-                        <a href="#suggestions" class="px-6 py-3 bg-white text-primary border border-primary rounded-lg hover:bg-gray-50 transition-colors shadow-sm hover:shadow">
-                            政策建议 <i class="fa fa-lightbulb-o ml-2"></i>
-                        </a>
+                    <p class="mb-4">
+                        2025年全国两会上，如何促进生育、提供良好的生育环境，也成为代表委员们热议的焦点话题。有委员提出为全职妈妈开设"妈妈岗"，有代表建议试点"父育假"，还有代表建议为二孩三孩家庭发放育儿补助。
+                    </p>
+                    <p class="mb-4">
+                        近年来，生育话题热度持续攀升。一方面，育龄女性受经济和职业发展等生育"隐形"压力，长时间处于"生与不生"的焦虑边缘；另一方面，已育女性因育儿负担沉重，难以在事业与家庭中找到平衡点。
+                    </p>
+                    <p class="mb-4">
+                        过去5年，由广东中山探索实施的"妈妈岗"就业模式逐步在全国推广开来。这个针对母亲群体设立的岗位，为女性劳动者缓解焦虑提供了一个"缓冲地带"。
+                    </p>
+                    
+                    <div class="mt-8 p-5 bg-primary/5 rounded-lg border-l-4 border-primary">
+                        <h3 class="text-xl font-semibold mb-2 text-primary">什么是"妈妈岗"？</h3>
+                        <p>
+                            具体来说，这是一种由政府鼓励引导、企业等用工主体开发设置，主要用于吸纳法定劳动年龄内对12周岁以下儿童负有抚养义务的妇女就业。
+                        </p>
+                    </div>
+                    
+                    <div class="mt-6 p-5 bg-secondary/5 rounded-lg border-l-4 border-secondary">
+                        <h3 class="text-xl font-semibold mb-2 text-secondary">引发的讨论</h3>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>"妈妈岗是否会固化女性育儿的刻板印象"</li>
+                            <li>"妈妈岗为何以零工岗居多"</li>
+                            <li>"妈妈岗是否会加重企业负担"</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- 事件背景 -->
-        <section id="background" class="py-16 bg-white">
-            <div class="container mx-auto px-4">
-                <div class="max-w-4xl mx-auto">
-                    <div class="mb-8">
-                        <h2 class="text-3xl font-bold text-dark">事件背景</h2>
-                    </div>
-                    
-                    <div class="bg-neutral rounded-xl p-6 shadow-sm mb-8">
-                        <p class="mb-4">
-                            3月5日，十四届全国人大三次会议在北京人民大会堂开幕，国务院总理李强在政府工作报告中指出：制定促进生育政策，发放育儿补贴。消息一出，"发放育儿补贴"便在各社交平台冲上热搜第一，且长时间占据"榜一"。
-                        </p>
-                        <p class="mb-4">
-                            2025年全国两会上，如何促进生育、提供良好的生育环境，也成为代表委员们热议的焦点话题。有委员提出为全职妈妈开设"妈妈岗"，有代表建议试点"父育假"，还有代表建议为二孩三孩家庭发放育儿补助。
-                        </p>
-                        <p class="mb-4">
-                            近年来，生育话题热度持续攀升。一方面，育龄女性受经济和职业发展等生育"隐形"压力，长时间处于"生与不生"的焦虑边缘；另一方面，已育女性因育儿负担沉重，难以在事业与家庭中找到平衡点。
-                        </p>
-                        <p class="mb-4">
-                            过去5年，由广东中山探索实施的"妈妈岗"就业模式逐步在全国推广开来。这个针对母亲群体设立的岗位，为女性劳动者缓解焦虑提供了一个"缓冲地带"。
-                        </p>
-                        
-                        <div class="mt-8 p-5 bg-primary/5 rounded-lg border-l-4 border-primary">
-                            <h3 class="text-xl font-semibold mb-2 text-primary">什么是"妈妈岗"？</h3>
+    <!-- 时间线 -->
+    <section id="timeline" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-12">
+                    <h2 class="text-3xl font-bold text-dark">政策发展时间线</h2>
+                </div>
+                
+                <div class="relative timeline-line pl-8 space-y-12">
+                    <!-- 2022年3月 -->
+                    <div class="relative timeline-dot" data-year="2022">
+                        <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="text-xl font-semibold text-dark">2022年3月</h3>
+                                <span class="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">政策试点</span>
+                            </div>
                             <p>
-                                具体来说，这是一种由政府鼓励引导、企业等用工主体开发设置，主要用于吸纳法定劳动年龄内对12周岁以下儿童负有抚养义务的妇女就业。
+                                广东中山首批"妈妈岗"在电子厂落地，实行"上午9点-12点，下午2点-5点"弹性工时，引发地方媒体关注。
                             </p>
                         </div>
-                        
-                        <div class="mt-6 p-5 bg-secondary/5 rounded-lg border-l-4 border-secondary">
-                            <h3 class="text-xl font-semibold mb-2 text-secondary">引发的讨论</h3>
-                            <ul class="list-disc pl-5 space-y-2">
-                                <li>"妈妈岗是否会固化女性育儿的刻板印象"</li>
-                                <li>"妈妈岗为何以零工岗居多"</li>
-                                <li>"妈妈岗是否会加重企业负担"</li>
-                            </ul>
+                    </div>
+                    
+                    <!-- 2022年11月 -->
+                    <div class="relative timeline-dot" data-year="2022">
+                        <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="text-xl font-semibold text-dark">2022年11月</h3>
+                                <span class="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">补贴政策</span>
+                            </div>
+                            <p>
+                                浙江温州推出"妈妈岗"补贴政策（企业每招1名"妈妈岗"员工，每月补贴500元），试点岗位扩展至电商、家政等领域。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- 2023年5月 -->
+                    <div class="relative timeline-dot" data-year="2023">
+                        <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="text-xl font-semibold text-dark">2023年5月</h3>
+                                <span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">官方支持</span>
+                            </div>
+                            <p>
+                                全国妇联在"促进女性就业"发布会中明确支持"妈妈岗"，称其"为女性平衡家庭与工作提供新思路"，话题#全国妇联支持妈妈岗#登上微博热搜（阅读量1.2亿）。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- 2023年10月 -->
+                    <div class="relative timeline-dot" data-year="2023">
+                        <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="text-xl font-semibold text-dark">2023年10月</h3>
+                                <span class="px-3 py-1 bg-red-100 text-red-700 text-sm rounded-full">政策争议</span>
+                            </div>
+                            <p>
+                                某企业"妈妈岗"被曝"工资低于最低工资标准""无社保"，引发"权益缩水"争议，负面舆论占比升至65%。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- 2024年4月 -->
+                    <div class="relative timeline-dot" data-year="2024">
+                        <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="text-xl font-semibold text-dark">2024年4月</h3>
+                                <span class="px-3 py-1 bg-blue-100 text-blue-700 text-sm rounded-full">政策规范</span>
+                            </div>
+                            <p>
+                                人社部调研"妈妈岗"试点成效，提出"需明确劳动权益保障细则"，政策规范讨论升温。
+                            </p>
                         </div>
                     </div>
                 </div>
+                
+                <!-- 年份筛选器 -->
+                <div class="flex flex-wrap gap-3 mt-10 justify-center">
+                    <button class="year-filter px-4 py-2 bg-white border border-gray-200 rounded-lg hover:border-primary hover:text-primary transition-colors active" data-filter="all">
+                        全部年份
+                    </button>
+                    <button class="year-filter px-4 py-2 bg-white border border-gray-200 rounded-lg hover:border-primary hover:text-primary transition-colors" data-filter="2022">
+                        2022年
+                    </button>
+                    <button class="year-filter px-4 py-2 bg-white border border-gray-200 rounded-lg hover:border-primary hover:text-primary transition-colors" data-filter="2023">
+                        2023年
+                    </button>
+                    <button class="year-filter px-4 py-2 bg-white border border-gray-200 rounded-lg hover:border-primary hover:text-primary transition-colors" data-filter="2024">
+                        2024年
+                    </button>
+                </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- 时间线 -->
-        <section id="timeline" class="py-16 bg-gray-50">
-            <div class="container mx-auto px-4">
-                <div class="max-w-4xl mx-auto">
-                    <div class="mb-12">
-                        <h2 class="text-3xl font-bold text-dark">政策发展时间线</h2>
-                    </div>
+    <!-- 媒体报道 -->
+    <section id="media" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-12">
+                    <h2 class="text-3xl font-bold text-dark">主流媒体报道</h2>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- 澎湃新闻 -->
+                    <a href="https://www.thepaper.cn/" target="_blank" class="block group media-card">
+                        <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
+                            <div class="h-48 media-img-container">
+                                <img src="图1.jpg" alt="澎湃新闻报道配图" class="media-img">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
+                                    <div class="p-4 text-white">
+                                        <span class="text-sm font-medium">澎湃新闻报道配图</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow flex flex-col">
+                                <div class="flex items-center mb-3">
+                                    <i class="fa fa-newspaper-o text-primary mr-2"></i>
+                                    <h3 class="text-xl font-semibold text-dark group-hover:text-primary transition-colors">澎湃新闻</h3>
+                                </div>
+                                <p class="text-gray-600 flex-grow">
+                                    多地探索设立"妈妈岗"，能否缓解女性职业困境？
+                                </p>
+                                <div class="mt-4 pt-4 border-t border-gray-100">
+                                    <span class="text-sm text-primary flex items-center">
+                                        阅读原文 <i class="fa fa-arrow-right ml-1"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
                     
-                    <div class="relative timeline-line pl-8 space-y-12">
-                        <!-- 2022年3月 -->
-                        <div class="relative timeline-dot" data-year="2022">
-                            <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
-                                <div class="flex justify-between items-start mb-3">
-                                    <h3 class="text-xl font-semibold text-dark">2022年3月</h3>
-                                    <span class="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">政策试点</span>
+                    <!-- 新华网 -->
+                    <a href="https://www.xinhuanet.com/" target="_blank" class="block group media-card">
+                        <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
+                            <div class="h-48 media-img-container">
+                                <img src="图2.jpg" alt="新华网报道配图" class="media-img">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
+                                    <div class="p-4 text-white">
+                                        <span class="text-sm font-medium">新华网报道配图</span>
+                                    </div>
                                 </div>
-                                <p>
-                                    广东中山首批"妈妈岗"在电子厂落地，实行"上午9点-12点，下午2点-5点"弹性工时，引发地方媒体关注。
+                            </div>
+                            <div class="p-6 flex-grow flex flex-col">
+                                <div class="flex items-center mb-3">
+                                    <i class="fa fa-globe text-blue-600 mr-2"></i>
+                                    <h3 class="text-xl font-semibold text-dark group-hover:text-blue-600 transition-colors">新华网</h3>
+                                </div>
+                                <p class="text-gray-600 flex-grow">
+                                    "妈妈岗"，实现灵活就业之后……
                                 </p>
+                                <div class="mt-4 pt-4 border-t border-gray-100">
+                                    <span class="text-sm text-blue-600 flex items-center">
+                                        阅读原文 <i class="fa fa-arrow-right ml-1"></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                        
-                        <!-- 2022年11月 -->
-                        <div class="relative timeline-dot" data-year="2022">
-                            <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
-                                <div class="flex justify-between items-start mb-3">
-                                    <h3 class="text-xl font-semibold text-dark">2022年11月</h3>
-                                    <span class="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">补贴政策</span>
-                                </div>
-                                <p>
-                                    浙江温州推出"妈妈岗"补贴政策（企业每招1名"妈妈岗"员工，每月补贴500元），试点岗位扩展至电商、家政等领域。
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <!-- 2023年5月 -->
-                        <div class="relative timeline-dot" data-year="2023">
-                            <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
-                                <div class="flex justify-between items-start mb-3">
-                                    <h3 class="text-xl font-semibold text-dark">2023年5月</h3>
-                                    <span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">官方支持</span>
-                                </div>
-                                <p>
-                                    全国妇联在"促进女性就业"发布会中明确支持"妈妈岗"，称其"为女性平衡家庭与工作提供新思路"，话题#全国妇联支持妈妈岗#登上微博热搜（阅读量1.2亿）。
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <!-- 2023年10月 -->
-                        <div class="relative timeline-dot" data-year="2023">
-                            <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
-                                <div class="flex justify-between items-start mb-3">
-                                    <h3 class="text-xl font-semibold text-dark">2023年10月</h3>
-                                    <span class="px-3 py-1 bg-red-100 text-red-700 text-sm rounded-full">政策争议</span>
-                                </div>
-                                <p>
-                                    某企业"妈妈岗"被曝"工资低于最低工资标准""无社保"，引发"权益缩水"争议，负面舆论占比升至65%。
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <!-- 2024年4月 -->
-                        <div class="relative timeline-dot" data-year="2024">
-                            <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
-                                <div class="flex justify-between items-start mb-3">
-                                    <h3 class="text-xl font-semibold text-dark">2024年4月</h3>
-                                    <span class="px-3 py-1 bg-blue-100 text-blue-700 text-sm rounded-full">政策规范</span>
-                                </div>
-                                <p>
-                                    人社部调研"妈妈岗"试点成效，提出"需明确劳动权益保障细则"，政策规范讨论升温。
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    </a>
                     
-                    <!-- 年份筛选器 -->
-                    <div class="flex flex-wrap gap-3 mt-10 justify-center">
-                        <button class="year-filter px-4 py-2 bg-white border border-gray-200 rounded-lg hover:border-primary hover:text-primary transition-colors active" data-filter="all">
-                            全部年份
+                    <!-- 人民网 -->
+                    <a href="https://www.people.com.cn/" target="_blank" class="block group media-card">
+                        <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
+                            <div class="h-48 media-img-container">
+                                <img src="图3.jpeg" alt="人民网报道配图" class="media-img">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
+                                    <div class="p-4 text-white">
+                                        <span class="text-sm font-medium">人民网报道配图</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow flex flex-col">
+                                <div class="flex items-center mb-3">
+                                    <i class="fa fa-newspaper-o text-red-600 mr-2"></i>
+                                    <h3 class="text-xl font-semibold text-dark group-hover:text-red-600 transition-colors">人民网</h3>
+                                </div>
+                                <p class="text-gray-600 flex-grow">
+                                    "妈妈岗"，妈妈喜欢
+                                </p>
+                                <div class="mt-4 pt-4 border-t border-gray-100">
+                                    <span class="text-sm text-red-600 flex items-center">
+                                        阅读原文 <i class="fa fa-arrow-right ml-1"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <!-- 央视网 -->
+                    <a href="https://www.cctv.com/" target="_blank" class="block group media-card">
+                        <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
+                            <div class="h-48 media-img-container">
+                                <img src="图4.jpg" alt="央视网报道配图" class="media-img">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
+                                    <div class="p-4 text-white">
+                                        <span class="text-sm font-medium">央视网报道配图</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow flex flex-col">
+                                <div class="flex items-center mb-3">
+                                    <i class="fa fa-television text-yellow-600 mr-2"></i>
+                                    <h3 class="text-xl font-semibold text-dark group-hover:text-yellow-600 transition-colors">央视网</h3>
+                                </div>
+                                <p class="text-gray-600 flex-grow">
+                                    多地探索"妈妈岗"减轻生育负担 专家：可改为"亲子岗"
+                                </p>
+                                <div class="mt-4 pt-4 border-t border-gray-100">
+                                    <span class="text-sm text-yellow-600 flex items-center">
+                                        阅读原文 <i class="fa fa-arrow-right ml-1"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 舆情分析 -->
+    <section id="analysis" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="max-w-5xl mx-auto">
+                <div class="mb-12">
+                    <h2 class="text-3xl font-bold text-dark">舆情分析</h2>
+                </div>
+                
+                <!-- 分析标签页导航 -->
+                <div class="mb-8 border-b border-gray-200">
+                    <div class="flex overflow-x-auto scrollbar-hide gap-2 md:gap-0">
+                        <button class="analysis-tab active px-6 py-3 text-primary border-b-2 border-primary font-medium" data-tab="comment-trend">
+                            评论趋势
                         </button>
-                        <button class="year-filter px-4 py-2 bg-white border border-gray-200 rounded-lg hover:border-primary hover:text-primary transition-colors" data-filter="2022">
-                            2022年
+                        <button class="analysis-tab px-6 py-3 text-gray-500 hover:text-gray-700 border-b-2 border-transparent font-medium" data-tab="sentiment">
+                            情感倾向
                         </button>
-                        <button class="year-filter px-4 py-2 bg-white border border-gray-200 rounded-lg hover:border-primary hover:text-primary transition-colors" data-filter="2023">
-                            2023年
+                        <button class="analysis-tab px-6 py-3 text-gray-500 hover:text-gray-700 border-b-2 border-transparent font-medium" data-tab="negative-words">
+                            负面评价词云
                         </button>
-                        <button class="year-filter px-4 py-2 bg-white border border-gray-200 rounded-lg hover:border-primary hover:text-primary transition-colors" data-filter="2024">
-                            2024年
+                        <button class="analysis-tab px-6 py-3 text-gray-500 hover:text-gray-700 border-b-2 border-transparent font-medium" data-tab="positive-words">
+                            正面评价词云
+                        </button>
+                        <button class="analysis-tab px-6 py-3 text-gray-500 hover:text-gray-700 border-b-2 border-transparent font-medium" data-tab="negative-topics">
+                            负面主题关联
                         </button>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <!-- 媒体报道 -->
-        <section id="media" class="py-16 bg-white">
-            <div class="container mx-auto px-4">
-                <div class="max-w-4xl mx-auto">
-                    <div class="mb-12">
-                        <h2 class="text-3xl font-bold text-dark">主流媒体报道</h2>
+                
+                <!-- 评论趋势 -->
+                <div class="analysis-content active" id="comment-trend">
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                        <h3 class="text-xl font-semibold text-dark mb-6">"妈妈岗"政策每月评论数量分布折线图</h3>
+                        <div class="h-80">
+                            <img src="妈妈岗政策每月评论数量分布折线图.png" alt="妈妈岗政策每月评论数量分布折线图" class="w-full h-full object-contain">
+                        </div>
                     </div>
                     
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <!-- 澎湃新闻 -->
-                        <a href="https://www.thepaper.cn/" target="_blank" class="block group media-card">
-                            <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
-                                <div class="h-48 media-img-container">
-                                    <img src="图1.jpg" alt="澎湃新闻报道配图" class="media-img">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
-                                        <div class="p-4 text-white">
-                                            <span class="text-sm font-medium">澎湃新闻报道配图</span>
+                    <div class="bg-neutral rounded-xl p-6">
+                        <h4 class="text-lg font-semibold text-dark mb-4">趋势分析</h4>
+                        <ul class="space-y-3 text-gray-700">
+                            <li class="flex items-start">
+                                <i class="fa fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                                <span><strong>3月</strong>：评论量处于低位，话题尚处传播初始化阶段</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                                <span><strong>4月</strong>：热度抬升，形成初级传播涟漪，实现传播势能的初次累积</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                                <span><strong>5月</strong>：热度回落，印证传播过程中注意力衰减规律</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                                <span><strong>6月</strong>：峰值突破，源于多元传播要素的协同作用，进入传播爆发期</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                                <span><strong>7月</strong>：热度骤降，体现传播的衰减性特征，回归低位稳态</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- 情感倾向 -->
+                <div class="analysis-content hidden" id="sentiment">
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                        <h3 class="text-xl font-semibold text-dark mb-6">"妈妈岗"政策情感倾向饼状图</h3>
+                        <div class="flex flex-col md:flex-row items-center gap-8">
+                            <div class="w-full md:w-1/2 h-80">
+                                <img src="妈妈岗政策情感倾向饼状图.png" alt="妈妈岗政策情感倾向饼状图" class="w-full h-full object-contain">
+                            </div>
+                            <div class="w-full md:w-1/2">
+                                <div class="space-y-6">
+                                    <div>
+                                        <div class="flex items-center mb-2">
+                                            <div class="w-4 h-4 bg-red-500 rounded-full mr-2"></div>
+                                            <h4 class="font-semibold">负面情感 (50%)</h4>
                                         </div>
+                                        <p class="text-gray-600 text-sm">
+                                            反映出超半数舆论对政策存在担忧，诸如忧虑政策执行中出现权益缩水，或是担心强化"女性需主要承担育儿责任"的刻板印象。
+                                        </p>
                                     </div>
-                                </div>
-                                <div class="p-6 flex-grow flex flex-col">
-                                    <div class="flex items-center mb-3">
-                                        <i class="fa fa-newspaper-o text-primary mr-2"></i>
-                                        <h3 class="text-xl font-semibold text-dark group-hover:text-primary transition-colors">澎湃新闻</h3>
+                                    
+                                    <div>
+                                        <div class="flex items-center mb-2">
+                                            <div class="w-4 h-4 bg-yellow-500 rounded-full mr-2"></div>
+                                            <h4 class="font-semibold">中性情感 (35%)</h4>
+                                        </div>
+                                        <p class="text-gray-600 text-sm">
+                                            说明近三分之一的舆论保持理性审视，聚焦于政策本身的利弊分析，比如探讨政策在不同地区、企业的可行性。
+                                        </p>
                                     </div>
-                                    <p class="text-gray-600 flex-grow">
-                                        多地探索设立"妈妈岗"，能否缓解女性职业困境？
-                                    </p>
-                                    <div class="mt-4 pt-4 border-t border-gray-100">
-                                        <span class="text-sm text-primary flex items-center">
-                                            阅读原文 <i class="fa fa-arrow-right ml-1"></i>
-                                        </span>
+                                    
+                                    <div>
+                                        <div class="flex items-center mb-2">
+                                            <div class="w-4 h-4 bg-green-500 rounded-full mr-2"></div>
+                                            <h4 class="font-semibold">正面情感 (15%)</h4>
+                                        </div>
+                                        <p class="text-gray-600 text-sm">
+                                            显示出仅少数群体认可该政策对妈妈群体就业的支持，看到其在帮助妈妈平衡育儿与工作难题上的价值。
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-                        </a>
-                        
-                        <!-- 新华网 -->
-                        <a href="https://www.xinhuanet.com/" target="_blank" class="block group media-card">
-                            <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
-                                <div class="h-48 media-img-container">
-                                    <img src="图2.jpg" alt="新华网报道配图" class="media-img">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
-                                        <div class="p-4 text-white">
-                                            <span class="text-sm font-medium">新华网报道配图</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="p-6 flex-grow flex flex-col">
-                                    <div class="flex items-center mb-3">
-                                        <i class="fa fa-globe text-blue-600 mr-2"></i>
-                                        <h3 class="text-xl font-semibold text-dark group-hover:text-blue-600 transition-colors">新华网</h3>
-                                    </div>
-                                    <p class="text-gray-600 flex-grow">
-                                        "妈妈岗"，实现灵活就业之后……
-                                    </p>
-                                    <div class="mt-4 pt-4 border-t border-gray-100">
-                                        <span class="text-sm text-blue-600 flex items-center">
-                                            阅读原文 <i class="fa fa-arrow-right ml-1"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        
-                        <!-- 人民网 -->
-                        <a href="https://www.people.com.cn/" target="_blank" class="block group media-card">
-                            <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
-                                <div class="h-48 media-img-container">
-                                    <img src="图3.jpeg" alt="人民网报道配图" class="media-img">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
-                                        <div class="p-4 text-white">
-                                            <span class="text-sm font-medium">人民网报道配图</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="p-6 flex-grow flex flex-col">
-                                    <div class="flex items-center mb-3">
-                                        <i class="fa fa-newspaper-o text-red-600 mr-2"></i>
-                                        <h3 class="text-xl font-semibold text-dark group-hover:text-red-600 transition-colors">人民网</h3>
-                                    </div>
-                                    <p class="text-gray-600 flex-grow">
-                                        "妈妈岗"，妈妈喜欢
-                                    </p>
-                                    <div class="mt-4 pt-4 border-t border-gray-100">
-                                        <span class="text-sm text-red-600 flex items-center">
-                                            阅读原文 <i class="fa fa-arrow-right ml-1"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        
-                        <!-- 央视网 -->
-                        <a href="https://www.cctv.com/" target="_blank" class="block group media-card">
-                            <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
-                                <div class="h-48 media-img-container">
-                                    <img src="图4.jpg" alt="央视网报道配图" class="media-img">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
-                                        <div class="p-4 text-white">
-                                            <span class="text-sm font-medium">央视网报道配图</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="p-6 flex-grow flex flex-col">
-                                    <div class="flex items-center mb-3">
-                                        <i class="fa fa-television text-yellow-600 mr-2"></i>
-                                        <h3 class="text-xl font-semibold text-dark group-hover:text-yellow-600 transition-colors">央视网</h3>
-                                    </div>
-                                    <p class="text-gray-600 flex-grow">
-                                        多地探索"妈妈岗"减轻生育负担 专家：可改为"亲子岗"
-                                    </p>
-                                    <div class="mt-4 pt-4 border-t border-gray-100">
-                                        <span class="text-sm text-yellow-600 flex items-center">
-                                            阅读原文 <i class="fa fa-arrow-right ml-1"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-neutral rounded-xl p-6">
+                        <h4 class="text-lg font-semibold text-dark mb-4">综合分析</h4>
+                        <p class="text-gray-700">
+                            "妈妈岗"政策当前舆论争议较大，负面情绪突出，后续需在权益保障、执行规范等方面发力优化，才能更好回应公众关切，提升政策认可度。
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 负面评价词云 -->
+                <div class="analysis-content hidden" id="negative-words">
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                        <h3 class="text-xl font-semibold text-dark mb-6">"妈妈岗"政策负面评价词云图</h3>
+                        <div class="h-80">
+                            <img src="妈妈岗政策负面评价词云图.png" alt="妈妈岗政策负面评价词云图" class="w-full h-full object-contain">
+                        </div>
+                    </div>
+                    
+                    <div class="bg-neutral rounded-xl p-6">
+                        <h4 class="text-lg font-semibold text-dark mb-4">词云解读</h4>
+                        <p class="text-gray-700 mb-4">
+                            词云图直观呈现出舆论对该政策的争议焦点。"工作""育儿"为基础语境，围绕"妈妈岗"平衡二者的初衷展开讨论。
+                        </p>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-start">
+                                <i class="fa fa-angle-right text-primary mt-1 mr-2"></i>
+                                <span>"男性""爸爸岗"高频出现，反映公众对育儿责任性别失衡的质疑</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-angle-right text-primary mt-1 mr-2"></i>
+                                <span>"歧视""抵制""拒绝"等词，凸显部分群体担忧政策会造成职场性别歧视</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-angle-right text-primary mt-1 mr-2"></i>
+                                <span>"义务""责任""社会""家庭"等词，折射出对育儿责任需社会与家庭协同承担的诉求</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-angle-right text-primary mt-1 mr-2"></i>
+                                <span>"收入""优待""就业"相关词汇，说明公众关注岗位在薪酬待遇、就业权益保障等问题</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- 正面评价词云 -->
+                <div class="analysis-content hidden" id="positive-words">
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                        <h3 class="text-xl font-semibold text-dark mb-6">"妈妈岗"政策正面评价词云图</h3>
+                        <div class="h-80">
+                            <img src="妈妈岗政策正面评价词云图.png" alt="妈妈岗政策正面评价词云图" class="w-full h-full object-contain">
+                        </div>
+                    </div>
+                    
+                    <div class="bg-neutral rounded-xl p-6">
+                        <h4 class="text-lg font-semibold text-dark mb-4">词云解读</h4>
+                        <p class="text-gray-700 mb-4">
+                            正面评价词云呈现出"妈妈岗"政策获得的积极反馈，彰显其社会价值。
+                        </p>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-start">
+                                <i class="fa fa-angle-right text-primary mt-1 mr-2"></i>
+                                <span>"支持"作为核心词汇，凸显舆论对政策助力妈妈群体平衡家庭与工作的肯定</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-angle-right text-primary mt-1 mr-2"></i>
+                                <span>"妈妈""爸爸""育儿"高频出现，体现政策响应育儿场景需求，契合家庭实际</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-angle-right text-primary mt-1 mr-2"></i>
+                                <span>"发展""就业""工作"等词，反映政策为妈妈拓宽职业路径、提供就业机会</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-angle-right text-primary mt-1 mr-2"></i>
+                                <span>"弹性""兼顾"等词，侧面体现政策在工作模式上的灵活性优势</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- 负面主题关联网络 -->
+                <div class="analysis-content hidden" id="negative-topics">
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                        <h3 class="text-xl font-semibold text-dark mb-6">"妈妈岗"政策负面评价主题-关键词关联网络图</h3>
+                        <div class="h-96">
+                            <img src="妈妈岗政策负面评价主题-关键词关联网络图.png" alt="妈妈岗政策负面评价主题-关键词关联网络图" class="w-full h-full object-contain">
+                        </div>
+                    </div>
+                    
+                    <div class="bg-neutral rounded-xl p-6">
+                        <h4 class="text-lg font-semibold text-dark mb-4">关联网络分析</h4>
+                        <p class="text-gray-700 mb-4">
+                            负面评论主题-关键词关联网络直观展现了围绕该政策负面评价的关键内容及彼此间的联系。
+                        </p>
+                        <ul class="space-y-3 text-gray-700">
+                            <li class="flex items-start">
+                                <i class="fa fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                                <span><strong>政策执行</strong>处于核心位置，与"劳动权益""监督""执行"等关键词紧密相连，表明政策执行过程中的劳动权益保障问题备受关注</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                                <span><strong>劳动权益</strong>与"薪资""社保""岗位"等关键词相关联，反映出公众对"妈妈岗"在薪资待遇、社保缴纳以及岗位稳定性等方面存在质疑</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                                <span><strong>性别观念</strong>与"女性""国际经验""传统""责任"等关键词相连，说明部分公众认为"妈妈岗"政策可能强化传统性别观念</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- 舆情分析 -->
-        <section id="analysis" class="py-16 bg-gray-50">
-            <div class="container mx-auto px-4">
-                <div class="max-w-5xl mx-auto">
-                    <div class="mb-12">
-                        <h2 class="text-3xl font-bold text-dark">舆情分析</h2>
+    <!-- 政策建议 -->
+    <section id="suggestions" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-12">
+                    <h2 class="text-3xl font-bold text-dark">政策建议</h2>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- 建议1 -->
+                    <div class="bg-neutral rounded-xl p-6 card-hover">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-5">
+                            <i class="fa fa-shield text-primary text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-dark mb-3">完善劳动权益保障机制</h3>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                                <span>细化劳动权益相关政策法规，明确"妈妈岗"薪资计算标准</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                                <span>强制规定企业为"妈妈岗"员工足额缴纳五险一金</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                                <span>加强劳动监察部门对企业的监督检查力度</span>
+                            </li>
+                        </ul>
                     </div>
                     
-                    <!-- 分析标签页导航 -->
-                    <div class="mb-8 border-b border-gray-200">
-                        <div class="flex overflow-x-auto scrollbar-hide gap-2 md:gap-0">
-                            <button class="analysis-tab active px-6 py-3 text-primary border-b-2 border-primary font-medium" data-tab="comment-trend">
-                                评论趋势
-                            </button>
-                            <button class="analysis-tab px-6 py-3 text-gray-500 hover:text-gray-700 border-b-2 border-transparent font-medium" data-tab="sentiment">
-                                情感倾向
-                            </button>
-                            <button class="analysis-tab px-6 py-3 text-gray-500 hover:text-gray-700 border-b-2 border-transparent font-medium" data-tab="negative-words">
-                                负面评价词云
-                            </button>
-                            <button class="analysis-tab px-6 py-3 text-gray-500 hover:text-gray-700 border-b-2 border-transparent font-medium" data-tab="positive-words">
-                                正面评价词云
-                            </button>
-                            <button class="analysis-tab px-6 py-3 text-gray-500 hover:text-gray-700 border-b-2 border-transparent font-medium" data-tab="negative-topics">
-                                负面主题关联
-                            </button>
+                    <!-- 建议2 -->
+                    <div class="bg-neutral rounded-xl p-6 card-hover">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-5">
+                            <i class="fa fa-cogs text-primary text-xl"></i>
                         </div>
+                        <h3 class="text-xl font-semibold text-dark mb-3">优化政策执行框架</h3>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                                <span>清晰界定"妈妈岗"的弹性工时制度，明确工作时长区间</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                                <span>制定详细的岗位认定标准，防止企业虚构岗位、钻政策空子</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                                <span>建立政策执行效果评估机制，定期收集反馈</span>
+                            </li>
+                        </ul>
                     </div>
                     
-                    <!-- 评论趋势 -->
-                    <div class="analysis-content active" id="comment-trend">
-                        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
-                            <h3 class="text-xl font-semibold text-dark mb-6">"妈妈岗"政策每月评论数量分布折线图</h3>
-                            <div class="h-80">
-                                <img src="妈妈岗政策每月评论数量分布折线图.png" alt="妈妈岗政策每月评论数量分布折线图" class="w-full h-full object-contain">
-                            </div>
+                    <!-- 建议3 -->
+                    <div class="bg-neutral rounded-xl p-6 card-hover">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-5">
+                            <i class="fa fa-users text-primary text-xl"></i>
                         </div>
-                        
-                        <div class="bg-neutral rounded-xl p-6">
-                            <h4 class="text-lg font-semibold text-dark mb-4">趋势分析</h4>
-                            <ul class="space-y-3 text-gray-700">
-                                <li class="flex items-start">
-                                    <i class="fa fa-circle text-xs text-primary mt-1.5 mr-3"></i>
-                                    <span><strong>3月</strong>：评论量处于低位，话题尚处传播初始化阶段</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-circle text-xs text-primary mt-1.5 mr-3"></i>
-                                    <span><strong>4月</strong>：热度抬升，形成初级传播涟漪，实现传播势能的初次累积</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-circle text-xs text-primary mt-1.5 mr-3"></i>
-                                    <span><strong>5月</strong>：热度回落，印证传播过程中注意力衰减规律</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-circle text-xs text-primary mt-1.5 mr-3"></i>
-                                    <span><strong>6月</strong>：峰值突破，源于多元传播要素的协同作用，进入传播爆发期</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-circle text-xs text-primary mt-1.5 mr-3"></i>
-                                    <span><strong>7月</strong>：热度骤降，体现传播的衰减性特征，回归低位稳态</span>
-                                </li>
-                            </ul>
-                        </div>
+                        <h3 class="text-xl font-semibold text-dark mb-3">促进性别责任共担</h3>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                                <span>同步出台"爸爸岗"政策，鼓励男性参与育儿</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                                <span>通过宣传引导、政策激励，推动家庭责任共担文化的形成</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                                <span>缓解女性"家庭——工作"双重压力，契合现代性别平等理念</span>
+                            </li>
+                        </ul>
                     </div>
                     
-                    <!-- 情感倾向 -->
-                    <div class="analysis-content hidden" id="sentiment">
-                        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
-                            <h3 class="text-xl font-semibold text-dark mb-6">"妈妈岗"政策情感倾向饼状图</h3>
-                            <div class="flex flex-col md:flex-row items-center gap-8">
-                                <div class="w-full md:w-1/2 h-80">
-                                    <img src="妈妈岗政策情感倾向饼状图.png" alt="妈妈岗政策情感倾向饼状图" class="w-full h-full object-contain">
-                                </div>
-                                <div class="w-full md:w-1/2">
-                                    <div class="space-y-6">
-                                        <div>
-                                            <div class="flex items-center mb-2">
-                                                <div class="w-4 h-4 bg-red-500 rounded-full mr-2"></div>
-                                                <h4 class="font-semibold">负面情感 (50%)</h4>
-                                            </div>
-                                            <p class="text-gray-600 text-sm">
-                                                反映出超半数舆论对政策存在担忧，诸如忧虑政策执行中出现权益缩水，或是担心强化"女性需主要承担育儿责任"的刻板印象。
-                                            </p>
-                                        </div>
-                                        
-                                        <div>
-                                            <div class="flex items-center mb-2">
-                                                <div class="w-4 h-4 bg-yellow-500 rounded-full mr-2"></div>
-                                                <h4 class="font-semibold">中性情感 (35%)</h4>
-                                            </div>
-                                            <p class="text-gray-600 text-sm">
-                                                说明近三分之一的舆论保持理性审视，聚焦于政策本身的利弊分析，比如探讨政策在不同地区、企业的可行性。
-                                            </p>
-                                        </div>
-                                        
-                                        <div>
-                                            <div class="flex items-center mb-2">
-                                                <div class="w-4 h-4 bg-green-500 rounded-full mr-2"></div>
-                                                <h4 class="font-semibold">正面情感 (15%)</h4>
-                                            </div>
-                                            <p class="text-gray-600 text-sm">
-                                                显示出仅少数群体认可该政策对妈妈群体就业的支持，看到其在帮助妈妈平衡育儿与工作难题上的价值。
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <!-- 建议4 -->
+                    <div class="bg-neutral rounded-xl p-6 card-hover">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-5">
+                            <i class="fa fa-globe text-primary text-xl"></i>
                         </div>
-                        
-                        <div class="bg-neutral rounded-xl p-6">
-                            <h4 class="text-lg font-semibold text-dark mb-4">综合分析</h4>
-                            <p class="text-gray-700">
-                                "妈妈岗"政策当前舆论争议较大，负面情绪突出，后续需在权益保障、执行规范等方面发力优化，才能更好回应公众关切，提升政策认可度。
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <!-- 负面评价词云 -->
-                    <div class="analysis-content hidden" id="negative-words">
-                        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
-                            <h3 class="text-xl font-semibold text-dark mb-6">"妈妈岗"政策负面评价词云图</h3>
-                            <div class="h-80">
-                                <img src="妈妈岗政策负面评价词云图.png" alt="妈妈岗政策负面评价词云图" class="w-full h-full object-contain">
-                            </div>
-                        </div>
-                        
-                        <div class="bg-neutral rounded-xl p-6">
-                            <h4 class="text-lg font-semibold text-dark mb-4">词云解读</h4>
-                            <p class="text-gray-700 mb-4">
-                                词云图直观呈现出舆论对该政策的争议焦点。"工作""育儿"为基础语境，围绕"妈妈岗"平衡二者的初衷展开讨论。
-                            </p>
-                            <ul class="space-y-2 text-gray-700">
-                                <li class="flex items-start">
-                                    <i class="fa fa-angle-right text-primary mt-1 mr-2"></i>
-                                    <span>"男性""爸爸岗"高频出现，反映公众对育儿责任性别失衡的质疑</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-angle-right text-primary mt-1 mr-2"></i>
-                                    <span>"歧视""抵制""拒绝"等词，凸显部分群体担忧政策会造成职场性别歧视</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-angle-right text-primary mt-1 mr-2"></i>
-                                    <span>"义务""责任""社会""家庭"等词，折射出对育儿责任需社会与家庭协同承担的诉求</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-angle-right text-primary mt-1 mr-2"></i>
-                                    <span>"收入""优待""就业"相关词汇，说明公众关注岗位在薪酬待遇、就业权益保障等问题</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <!-- 正面评价词云 -->
-                    <div class="analysis-content hidden" id="positive-words">
-                        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
-                            <h3 class="text-xl font-semibold text-dark mb-6">"妈妈岗"政策正面评价词云图</h3>
-                            <div class="h-80">
-                                <img src="妈妈岗政策正面评价词云图.png" alt="妈妈岗政策正面评价词云图" class="w-full h-full object-contain">
-                            </div>
-                        </div>
-                        
-                        <div class="bg-neutral rounded-xl p-6">
-                            <h4 class="text-lg font-semibold text-dark mb-4">词云解读</h4>
-                            <p class="text-gray-700 mb-4">
-                                正面评价词云呈现出"妈妈岗"政策获得的积极反馈，彰显其社会价值。
-                            </p>
-                            <ul class="space-y-2 text-gray-700">
-                                <li class="flex items-start">
-                                    <i class="fa fa-angle-right text-primary mt-1 mr-2"></i>
-                                    <span>"支持"作为核心词汇，凸显舆论对政策助力妈妈群体平衡家庭与工作的肯定</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-angle-right text-primary mt-1 mr-2"></i>
-                                    <span>"妈妈""爸爸""育儿"高频出现，体现政策响应育儿场景需求，契合家庭实际</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-angle-right text-primary mt-1 mr-2"></i>
-                                    <span>"发展""就业""工作"等词，反映政策为妈妈拓宽职业路径、提供就业机会</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-angle-right text-primary mt-1 mr-2"></i>
-                                    <span>"弹性""兼顾"等词，侧面体现政策在工作模式上的灵活性优势</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <!-- 负面主题关联网络 -->
-                    <div class="analysis-content hidden" id="negative-topics">
-                        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
-                            <h3 class="text-xl font-semibold text-dark mb-6">"妈妈岗"政策负面评价主题-关键词关联网络图</h3>
-                            <div class="h-96">
-                                <img src="妈妈岗政策负面评价主题-关键词关联网络图.png" alt="妈妈岗政策负面评价主题-关键词关联网络图" class="w-full h-full object-contain">
-                            </div>
-                        </div>
-                        
-                        <div class="bg-neutral rounded-xl p-6">
-                            <h4 class="text-lg font-semibold text-dark mb-4">关联网络分析</h4>
-                            <p class="text-gray-700 mb-4">
-                                负面评论主题-关键词关联网络直观展现了围绕该政策负面评价的关键内容及彼此间的联系。
-                            </p>
-                            <ul class="space-y-3 text-gray-700">
-                                <li class="flex items-start">
-                                    <i class="fa fa-circle text-xs text-primary mt-1.5 mr-3"></i>
-                                    <span><strong>政策执行</strong>处于核心位置，与"劳动权益""监督""执行"等关键词紧密相连，表明政策执行过程中的劳动权益保障问题备受关注</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-circle text-xs text-primary mt-1.5 mr-3"></i>
-                                    <span><strong>劳动权益</strong>与"薪资""社保""岗位"等关键词相关联，反映出公众对"妈妈岗"在薪资待遇、社保缴纳以及岗位稳定性等方面存在质疑</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-circle text-xs text-primary mt-1.5 mr-3"></i>
-                                    <span><strong>性别观念</strong>与"女性""国际经验""传统""责任"等关键词相连，说明部分公众认为"妈妈岗"政策可能强化传统性别观念</span>
-                                </li>
-                            </ul>
-                        </div>
+                        <h3 class="text-xl font-semibold text-dark mb-3">强化政策的本土适配</h3>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                                <span>深入研究国际"家庭友好政策"经验，结合中国社会文化进行改良</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                                <span>建立适合本土的"妈妈岗"职业发展体系</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                                <span>打破"政策保护=职场排斥"的困境，提升政策落地可行性</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- 政策建议 -->
-        <section id="suggestions" class="py-16 bg-white">
-            <div class="container mx-auto px-4">
-                <div class="max-w-4xl mx-auto">
-                    <div class="mb-12">
-                        <h2 class="text-3xl font-bold text-dark">政策建议</h2>
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="max-w-5xl mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+                    <div class="flex items-center mb-6 md:mb-0">
+                        <i class="fa fa-female text-primary text-2xl mr-3"></i>
+                        <h2 class="text-xl font-bold">妈妈岗政策舆情分析</h2>
                     </div>
-                    
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <!-- 建议1 -->
-                        <div class="bg-neutral rounded-xl p-6 card-hover">
-                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-5">
-                                <i class="fa fa-shield text-primary text-xl"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold text-dark mb-3">完善劳动权益保障机制</h3>
-                            <ul class="space-y-2 text-gray-600">
-                                <li class="flex items-start">
-                                    <i class="fa fa-check text-primary mt-1 mr-2"></i>
-                                    <span>细化劳动权益相关政策法规，明确"妈妈岗"薪资计算标准</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-check text-primary mt-1 mr-2"></i>
-                                    <span>强制规定企业为"妈妈岗"员工足额缴纳五险一金</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-check text-primary mt-1 mr-2"></i>
-                                    <span>加强劳动监察部门对企业的监督检查力度</span>
-                                </li>
-                            </ul>
-                        </div>
-                        
-                        <!-- 建议2 -->
-                        <div class="bg-neutral rounded-xl p-6 card-hover">
-                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-5">
-                                <i class="fa fa-cogs text-primary text-xl"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold text-dark mb-3">优化政策执行框架</h3>
-                            <ul class="space-y-2 text-gray-600">
-                                <li class="flex items-start">
-                                    <i class="fa fa-check text-primary mt-1 mr-2"></i>
-                                    <span>清晰界定"妈妈岗"的弹性工时制度，明确工作时长区间</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-check text-primary mt-1 mr-2"></i>
-                                    <span>制定详细的岗位认定标准，防止企业虚构岗位、钻政策空子</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-check text-primary mt-1 mr-2"></i>
-                                    <span>建立政策执行效果评估机制，定期收集反馈</span>
-                                </li>
-                            </ul>
-                        </div>
-                        
-                        <!-- 建议3 -->
-                        <div class="bg-neutral rounded-xl p-6 card-hover">
-                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-5">
-                                <i class="fa fa-users text-primary text-xl"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold text-dark mb-3">促进性别责任共担</h3>
-                            <ul class="space-y-2 text-gray-600">
-                                <li class="flex items-start">
-                                    <i class="fa fa-check text-primary mt-1 mr-2"></i>
-                                    <span>同步出台"爸爸岗"政策，鼓励男性参与育儿</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-check text-primary mt-1 mr-2"></i>
-                                    <span>通过宣传引导、政策激励，推动家庭责任共担文化的形成</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-check text-primary mt-1 mr-2"></i>
-                                    <span>缓解女性"家庭——工作"双重压力，契合现代性别平等理念</span>
-                                </li>
-                            </ul>
-                        </div>
-                        
-                        <!-- 建议4 -->
-                        <div class="bg-neutral rounded-xl p-6 card-hover">
-                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-5">
-                                <i class="fa fa-globe text-primary text-xl"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold text-dark mb-3">强化政策的本土适配</h3>
-                            <ul class="space-y-2 text-gray-600">
-                                <li class="flex items-start">
-                                    <i class="fa fa-check text-primary mt-1 mr-2"></i>
-                                    <span>深入研究国际"家庭友好政策"经验，结合中国社会文化进行改良</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-check text-primary mt-1 mr-2"></i>
-                                    <span>建立适合本土的"妈妈岗"职业发展体系</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fa fa-check text-primary mt-1 mr-2"></i>
-                                    <span>打破"政策保护=职场排斥"的困境，提升政策落地可行性</span>
-                                </li>
-                            </ul>
-                        </div>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors">
+                            <i class="fa fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors">
+                            <i class="fa fa-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors">
+                            <i class="fa fa-linkedin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors">
+                            <i class="fa fa-github text-xl"></i>
+                        </a>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <!-- 页脚 -->
-        <footer class="bg-dark text-white py-12">
-            <div class="container mx-auto px-4">
-                <div class="max-w-5xl mx-auto">
-                    <div class="flex flex-col md:flex-row justify-between items-center mb-8">
-                        <div class="flex items-center mb-6 md:mb-0">
-                            <i class="fa fa-female text-primary text-2xl mr-3"></i>
-                            <h2 class="text-xl font-bold">妈妈岗政策舆情分析</h2>
-                        </div>
-                        <div class="flex space-x-6">
-                            <a href="#" class="text-gray-300 hover:text-white transition-colors">
-                                <i class="fa fa-twitter text-xl"></i>
-                            </a>
-                            <a href="#" class="text-gray-300 hover:text-white transition-colors">
-                                <i class="fa fa-facebook text-xl"></i>
-                            </a>
-                            <a href="#" class="text-gray-300 hover:text-white transition-colors">
-                                <i class="fa fa-linkedin text-xl"></i>
-                            </a>
-                            <a href="#" class="text-gray-300 hover:text-white transition-colors">
-                                <i class="fa fa-github text-xl"></i>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div class="border-t border-gray-700 pt-8 mt-8 text-center text-gray-400 text-sm">
-                        <p>© 2025 "妈妈岗"政策舆情分析平台. 保留所有权利.</p>
-                    </div>
+                
+                <div class="border-t border-gray-700 pt-8 mt-8 text-center text-gray-400 text-sm">
+                    <p>© 2025 "妈妈岗"政策舆情分析平台. 保留所有权利.</p>
                 </div>
             </div>
-        </footer>
+        </div>
+    </footer>
 
-        <!-- 返回顶部按钮 -->
-        <button id="backToTop" class="fixed bottom-8 right-8 bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-primary/90">
-            <i class="fa fa-arrow-up"></i>
-        </button>
+    <!-- 返回顶部按钮 -->
+    <button id="backToTop" class="fixed bottom-8 right-8 bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-primary/90">
+        <i class="fa fa-arrow-up"></i>
+    </button>
 
-        <script>
-            // 导航栏滚动效果
-            const navbar = document.getElementById('navbar');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    navbar.classList.add('py-2', 'shadow');
-                    navbar.classList.remove('py-3');
-                } else {
-                    navbar.classList.add('py-3');
-                    navbar.classList.remove('py-2', 'shadow');
-                }
-            });
-            
-            // 移动端菜单切换
-            const menuBtn = document.getElementById('menuBtn');
-            const mobileMenu = document.getElementById('mobileMenu');
-            
-            menuBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-                const icon = menuBtn.querySelector('i');
-                if (mobileMenu.classList.contains('hidden')) {
+    <script>
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('py-2', 'shadow');
+                navbar.classList.remove('py-3');
+            } else {
+                navbar.classList.add('py-3');
+                navbar.classList.remove('py-2', 'shadow');
+            }
+        });
+        
+        // 移动端菜单切换
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            const icon = menuBtn.querySelector('i');
+            if (mobileMenu.classList.contains('hidden')) {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            } else {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            }
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                // 关闭移动菜单（如果打开）
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                    const icon = menuBtn.querySelector('i');
                     icon.classList.remove('fa-times');
                     icon.classList.add('fa-bars');
-                } else {
-                    icon.classList.remove('fa-bars');
-                    icon.classList.add('fa-times');
+                }
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
                 }
             });
-            
-            // 平滑滚动
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    
-                    // 关闭移动菜单（如果打开）
-                    if (!mobileMenu.classList.contains('hidden')) {
-                        mobileMenu.classList.add('hidden');
-                        const icon = menuBtn.querySelector('i');
-                        icon.classList.remove('fa-times');
-                        icon.classList.add('fa-bars');
-                    }
-                    
-                    const targetId = this.getAttribute('href');
-                    const targetElement = document.querySelector(targetId);
-                    
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80,
-                            behavior: 'smooth'
-                        });
+        });
+        
+        // 返回顶部按钮
+        const backToTopBtn = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.remove('opacity-0', 'invisible');
+                backToTopBtn.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopBtn.classList.add('opacity-0', 'invisible');
+                backToTopBtn.classList.remove('opacity-100', 'visible');
+            }
+        });
+        
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // 年份筛选
+        const yearFilters = document.querySelectorAll('.year-filter');
+        const timelineItems = document.querySelectorAll('.timeline-dot');
+        
+        yearFilters.forEach(filter => {
+            filter.addEventListener('click', () => {
+                // 更新活跃状态
+                yearFilters.forEach(f => f.classList.remove('active', 'bg-primary/10', 'text-primary'));
+                filter.classList.add('active', 'bg-primary/10', 'text-primary');
+                
+                const year = filter.getAttribute('data-filter');
+                
+                // 筛选时间线项目
+                timelineItems.forEach(item => {
+                    if (year === 'all' || item.getAttribute('data-year') === year) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
                     }
                 });
             });
-            
-            // 返回顶部按钮
-            const backToTopBtn = document.getElementById('backToTop');
-            
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 300) {
+        });
+        
+        // 分析标签页切换
+        const analysisTabs = document.querySelectorAll('.analysis-tab');
+        const analysisContents = document.querySelectorAll('.analysis-content');
+        
+        analysisTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 更新标签页活跃状态
+                analysisTabs.forEach(t => {
+                    t.classList.remove('active', 'text-primary', 'border-primary');
+                    t.classList.add('text-gray-500', 'border-transparent');
+                });
+                tab.classList.add('active', 'text-primary', 'border-primary');
+                tab.classList.remove('text-gray-500', 'border-transparent');
+                
+                // 显示对应的内容
+                const tabId = tab.getAttribute('data-tab');
+                analysisContents.forEach(content => {
+                    content.classList.add('hidden');
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
